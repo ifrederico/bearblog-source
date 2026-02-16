@@ -1,0 +1,488 @@
+<div class="sub-footer">
+  <a href="/privacy-policy/" class="footer-extra-link">Privacy Policy</a>
+  <a href="/terms-use/" class="footer-extra-link">Terms of Use</a>
+</div>
+
+<script>
+// Mobile menu + subscribe button
+function initMenu() {
+  const header = document.querySelector("header");
+  const nav = header?.querySelector("nav") || document.querySelector("nav");
+  if (!nav) return;
+
+  nav.classList.add("menu");
+
+  if (!nav.querySelector(".menu-subscribe")) {
+    const subscribeLink = document.createElement("a");
+    subscribeLink.className = "menu-subscribe";
+    subscribeLink.href = "#";
+    subscribeLink.textContent = "Subscribe";
+    nav.appendChild(subscribeLink);
+  }
+
+  let hamburger = header?.querySelector(".hamburger-btn") || document.querySelector(".hamburger-btn");
+  if (!hamburger) {
+    hamburger = document.createElement("button");
+    hamburger.type = "button";
+    hamburger.className = "hamburger-btn";
+    hamburger.setAttribute("aria-label", "Toggle Menu");
+    hamburger.setAttribute("aria-expanded", "false");
+    hamburger.innerHTML = `
+      <svg class="menuIcon" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+        stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <line x1="3" y1="12" x2="21" y2="12"></line>
+        <line x1="3" y1="6" x2="21" y2="6"></line>
+        <line x1="3" y1="18" x2="21" y2="18"></line>
+      </svg>
+      <svg class="closeIcon" style="display:none" width="24" height="24" viewBox="0 0 24 24" fill="none"
+        stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <line x1="18" y1="6" x2="6" y2="18"></line>
+        <line x1="6" y1="6" x2="18" y2="18"></line>
+      </svg>
+    `;
+    if (header && nav) {
+      header.insertBefore(hamburger, nav);
+    } else {
+      document.body.prepend(hamburger);
+    }
+  }
+
+  const closeIcon = hamburger.querySelector(".closeIcon");
+  const menuIcon = hamburger.querySelector(".menuIcon");
+  const mobileMedia = window.matchMedia("(max-width: 768px)");
+  const menuItems = nav.querySelectorAll("a");
+
+  if (!nav.id) {
+    nav.id = "site-menu";
+  }
+  hamburger.setAttribute("aria-controls", nav.id);
+
+  function setMenuOpen(isOpen) {
+    document.body.classList.toggle("menu-open", isOpen);
+    if (!isOpen) {
+      nav.classList.remove("menu-subscribe-open");
+      document.body.classList.remove("menu-subscribe-open");
+    }
+
+    if (closeIcon) {
+      closeIcon.style.display = isOpen ? "block" : "none";
+    }
+    if (menuIcon) {
+      menuIcon.style.display = isOpen ? "none" : "block";
+    }
+    hamburger.setAttribute("aria-expanded", String(isOpen));
+    nav.setAttribute("aria-hidden", String(!isOpen));
+  }
+
+  function updateHeaderHeight() {
+    if (!header) {
+      document.documentElement.style.setProperty("--header-height", "0px");
+      return;
+    }
+    const height = Math.ceil(header.getBoundingClientRect().height);
+    document.documentElement.style.setProperty("--header-height", `${height}px`);
+  }
+
+  function toggleMenu() {
+    setMenuOpen(!document.body.classList.contains("menu-open"));
+  }
+
+  function handleResize() {
+    updateHeaderHeight();
+    if (!mobileMedia.matches) {
+      setMenuOpen(false);
+    }
+  }
+
+  hamburger.addEventListener("click", toggleMenu);
+  menuItems.forEach((menuItem) => {
+    menuItem.addEventListener("click", () => {
+      if (!mobileMedia.matches) return;
+      if (menuItem.classList.contains("menu-subscribe")) return;
+      const href = menuItem.getAttribute("href") || "";
+      if (href.startsWith("#")) {
+        setMenuOpen(false);
+      }
+    });
+  });
+
+  window.addEventListener("resize", handleResize);
+  if (mobileMedia.addEventListener) {
+    mobileMedia.addEventListener("change", handleResize);
+  } else if (mobileMedia.addListener) {
+    mobileMedia.addListener(handleResize);
+  }
+
+  updateHeaderHeight();
+  setMenuOpen(false);
+}
+
+// Subscribe panel (menu step 2)
+function initSubscribePanel() {
+  const nav = document.querySelector("nav.menu");
+  if (!nav) return;
+
+  const subscribeLink = nav.querySelector(".menu-subscribe");
+  if (!subscribeLink) return;
+
+  const panel = ensureSubscribePanel(nav);
+  const backButton = ensureSubscribeBackButton();
+  if (backButton && !backButton.dataset.bound) {
+    backButton.dataset.bound = "true";
+    backButton.addEventListener("click", () => closeSubscribePanel(nav, panel));
+  }
+
+  subscribeLink.addEventListener("click", (event) => {
+    event.preventDefault();
+    openSubscribePanel(nav, panel);
+  });
+}
+
+function ensureSubscribeBackButton() {
+  const header = document.querySelector("header");
+  if (!header) return null;
+
+  let backButton = header.querySelector(".menu-back-btn");
+  if (backButton) return backButton;
+
+  backButton = document.createElement("button");
+  backButton.type = "button";
+  backButton.className = "menu-back-btn";
+  backButton.setAttribute("aria-label", "Back");
+  backButton.innerHTML = `
+    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+      <polyline points="15 18 9 12 15 6"></polyline>
+    </svg>
+  `;
+
+  const hamburger = header.querySelector(".hamburger-btn");
+  if (hamburger) {
+    hamburger.insertAdjacentElement("afterend", backButton);
+  } else {
+    header.appendChild(backButton);
+  }
+
+  return backButton;
+}
+
+function ensureSubscribePanel(nav) {
+  let panel = nav.querySelector(".menu-subscribe-panel");
+  if (panel) return panel;
+
+  panel = document.createElement("div");
+  panel.className = "menu-subscribe-panel";
+  panel.setAttribute("aria-hidden", "true");
+  panel.innerHTML = `
+    <div class="menu-subscribe-body" data-subscribe-form>
+    </div>
+  `;
+  nav.appendChild(panel);
+
+  document.addEventListener("keydown", (event) => {
+    if (event.key === "Escape") {
+      closeSubscribePanel(nav, panel);
+    }
+  });
+
+  return panel;
+}
+
+function loadSubscribeForm(panel) {
+  const container = panel.querySelector("[data-subscribe-form]");
+  if (!container || container.dataset.loaded === "true") return;
+
+  const script = document.createElement("script");
+  script.async = true;
+  script.src = "https://eocampaign1.com/form/f77f6eca-f422-11f0-af94-c9c0c74f45fc.js";
+  script.dataset.form = "f77f6eca-f422-11f0-af94-c9c0c74f45fc";
+
+  container.dataset.loaded = "true";
+  container.appendChild(script);
+}
+
+function openSubscribePanel(nav, panel) {
+  loadSubscribeForm(panel);
+  nav.classList.add("menu-subscribe-open");
+  document.body.classList.add("menu-subscribe-open");
+  panel.setAttribute("aria-hidden", "false");
+}
+
+function closeSubscribePanel(nav, panel) {
+  nav.classList.remove("menu-subscribe-open");
+  document.body.classList.remove("menu-subscribe-open");
+  panel.setAttribute("aria-hidden", "true");
+}
+
+// Make post list items clickable
+function initPostCardLinks() {
+  const items = document.querySelectorAll("ul.embedded li, ul.blog-posts li");
+  items.forEach((item) => {
+    const link = item.querySelector("a");
+    if (!link) return;
+
+    item.addEventListener("click", (event) => {
+      const target = event.target;
+      if (target.closest("a")) return;
+      link.click();
+    });
+  });
+}
+
+// Move tags above post title and strip leading "#"
+function initPostTags() {
+  const tags = document.querySelector("body.post p.tags");
+  const title = document.querySelector("body.post main h1");
+  if (tags && title) {
+    title.insertAdjacentElement("beforebegin", tags);
+  }
+  if (tags) {
+    tags.querySelectorAll("a").forEach((tag) => {
+      tag.textContent = tag.textContent.replace(/^#/, "");
+    });
+  }
+}
+
+// Bear edit shortcut
+function initEditRedirect() {
+  const wantsEdit =
+    /[?&]edit\b/.test(location.search) ||
+    location.hash === "#edit" ||
+    /\/edit\/?$/.test(location.pathname);
+
+  if (!wantsEdit) return;
+
+  const getUid = () =>
+    document.querySelector('input[name="uid"]')?.value;
+
+  const getBlog = () => {
+    const host = location.hostname;
+    if (host.endsWith(".bearblog.dev")) return host.split(".")[0];
+    return "frederico"; // set your blog slug for custom domain
+  };
+
+  const go = (uid) => {
+    location.href = `https://bearblog.dev/${getBlog()}/dashboard/posts/${uid}/`;
+  };
+
+  const uid = getUid();
+  if (uid) go(uid);
+  else window.addEventListener("load", () => {
+    const uid2 = getUid();
+    if (uid2) go(uid2);
+  });
+}
+
+// Mark active navigation link based on current URL
+function initActiveNavLink() {
+  const normalizePath = (path) =>
+    path.length > 1 ? path.replace(/\/+$/, "") : path;
+  const currentPath = normalizePath(location.pathname);
+  const currentSearch = location.search;
+  const hasFilterQuery =
+    currentSearch && new URLSearchParams(currentSearch).has("q");
+  const isBlogFilter =
+    currentPath === "/archive" && hasFilterQuery;
+  const navLinks = document.querySelectorAll("header nav a:not(.menu-subscribe)");
+
+  navLinks.forEach((link) => {
+    const linkUrl = new URL(link.href, location.origin);
+    const linkPath = normalizePath(linkUrl.pathname);
+    const linkSearch = linkUrl.search;
+
+    if (linkSearch) {
+      if (currentPath === linkPath && currentSearch === linkSearch) {
+        link.classList.add("active");
+      }
+      return;
+    }
+
+    if (isBlogFilter && linkPath === "/archive") {
+      return;
+    }
+
+    if (currentPath === linkPath || (linkPath !== "/" && currentPath.startsWith(`${linkPath}/`))) {
+      link.classList.add("active");
+    }
+  });
+}
+
+function initBlogAllPostsLabel() {
+  const isBlogIndex = /^\/archive\/?$/.test(location.pathname);
+  if (!isBlogIndex) return;
+
+  const list = document.querySelector("ul.blog-posts");
+  if (!list) return;
+
+  const existingLabel = list.previousElementSibling;
+  if (existingLabel && existingLabel.classList.contains("section-label")) return;
+
+  if (document.querySelector(".section-label.blog-all-posts")) return;
+
+  const label = document.createElement("h6");
+  label.className = "section-label blog-all-posts";
+  label.textContent = "All Posts";
+  list.insertAdjacentElement("beforebegin", label);
+}
+
+function initBlogFilterHeading() {
+  if (!document.body.classList.contains("blog")) return;
+
+  const heading = document.querySelector("body.blog main > h3");
+  if (!heading) return;
+
+  const tagEls = heading.querySelectorAll(".tag");
+  if (!tagEls.length) return;
+
+  const tagNames = Array.from(tagEls)
+    .map((tag) => {
+      const clone = tag.cloneNode(true);
+      clone.querySelectorAll("a").forEach((link) => link.remove());
+      return clone.textContent.replace(/\s+/g, " ").trim().replace(/^#/, "");
+    })
+    .filter(Boolean);
+
+  if (!tagNames.length) return;
+
+  const toTitle = (value) =>
+    value
+      .split(/[\s-_]+/)
+      .filter(Boolean)
+      .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
+      .join(" ");
+
+  const titleText = tagNames.map(toTitle).join(", ");
+  const title = document.createElement("h1");
+  title.className = "blog-filter-title";
+  title.textContent = titleText;
+  heading.replaceWith(title);
+}
+
+// Fetch and display post thumbnails and excerpts for blog listing
+async function initBlogPostThumbnails() {
+  const postItems = document.querySelectorAll("ul.blog-posts li");
+  if (!postItems.length) return;
+
+  const dateRegex = /^\d{1,2}\s+[A-Za-z]{3,9},?\s+\d{4}$/;
+  const placeholderSrc =
+    "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///ywAAAAAAQABAAACAUwAOw==";
+
+  const ensurePlaceholder = (item) => {
+    let placeholder = item.querySelector("img.post-thumb");
+    if (placeholder) return placeholder;
+
+    placeholder = document.createElement("img");
+    placeholder.className = "post-thumb is-placeholder";
+    placeholder.alt = "";
+    placeholder.decoding = "async";
+    placeholder.loading = "lazy";
+    placeholder.src = placeholderSrc;
+    item.appendChild(placeholder);
+    return placeholder;
+  };
+
+  postItems.forEach(async (item) => {
+    const link = item.querySelector("a");
+    if (!link) return;
+
+    // Skip if both image and excerpt already exist
+    const hasImage = item.querySelector("img");
+    const excerptEl = item.querySelector("p");
+    const existingExcerptText = excerptEl?.textContent?.trim() || "";
+    const itemTimeText = item.querySelector("time")?.textContent?.trim() || "";
+    const existingIsDate =
+      !!existingExcerptText &&
+      (existingExcerptText === itemTimeText || dateRegex.test(existingExcerptText));
+    const hasExcerpt = !!excerptEl && !existingIsDate;
+    if (hasImage && hasExcerpt) return;
+
+    const placeholder = !hasImage ? ensurePlaceholder(item) : null;
+
+    try {
+      const response = await fetch(link.href);
+      if (!response.ok) return;
+
+      const html = await response.text();
+      const parser = new DOMParser();
+      const doc = parser.parseFromString(html, "text/html");
+
+      // Extract and insert image if missing
+      if (!hasImage) {
+        const metaImage = doc.querySelector(
+          'meta[property="og:image"], meta[name="twitter:image"]'
+        )?.getAttribute("content")?.trim();
+        const img = doc.querySelector("main img");
+        const imageUrl = metaImage || img?.getAttribute("src") || img?.src;
+
+        if (imageUrl) {
+          const resolvedUrl = new URL(imageUrl, link.href).href;
+          const thumbnail = placeholder || document.createElement("img");
+          thumbnail.src = resolvedUrl;
+          thumbnail.alt = img?.alt || link.textContent;
+          thumbnail.decoding = "async";
+          thumbnail.loading = "lazy";
+          thumbnail.classList.remove("is-placeholder");
+          if (!thumbnail.classList.contains("post-thumb")) {
+            thumbnail.classList.add("post-thumb");
+            item.appendChild(thumbnail);
+          }
+        }
+      }
+
+      // Extract and insert excerpt if missing
+      if (!hasExcerpt) {
+        const metaDescription = doc.querySelector(
+          'meta[name="description"], meta[property="og:description"], meta[name="twitter:description"]'
+        )?.getAttribute("content")?.trim();
+        let excerptText = metaDescription || "";
+
+        if (!excerptText) {
+          const timeText = doc.querySelector("time")?.textContent?.trim() || "";
+          const paragraphs = Array.from(doc.querySelectorAll("main p"));
+          const candidate = paragraphs.find((paragraph) => {
+            if (paragraph.querySelector("time")) return false;
+            const text = paragraph.textContent.replace(/\s+/g, " ").trim();
+            if (!text) return false;
+            if (timeText && text === timeText) return false;
+            if (dateRegex.test(text)) return false;
+            return true;
+          });
+          excerptText = candidate?.textContent.replace(/\s+/g, " ").trim() || "";
+        }
+
+        if (excerptText) {
+          if (excerptEl && existingIsDate) {
+            excerptEl.textContent = excerptText;
+          } else if (!excerptEl) {
+            const excerpt = document.createElement("p");
+            excerpt.textContent = excerptText;
+            // Insert after the link
+            link.insertAdjacentElement("afterend", excerpt);
+          }
+        }
+      }
+    } catch (error) {
+      // Silently fail - missing content is fine
+    }
+  });
+}
+
+function initPage() {
+  initMenu();
+  initSubscribePanel();
+  initPostCardLinks();
+  initPostTags();
+  initEditRedirect();
+  initActiveNavLink();
+  initBlogAllPostsLabel();
+  initBlogFilterHeading();
+  initBlogPostThumbnails();
+}
+
+if (document.readyState === "loading") {
+  document.addEventListener("DOMContentLoaded", initPage);
+} else {
+  initPage();
+}
+
+</script>
