@@ -192,13 +192,15 @@ function loadSubscribeForm(panel) {
   const container = panel.querySelector("[data-subscribe-form]");
   if (!container || container.dataset.loaded === "true") return;
 
-  const script = document.createElement("script");
-  script.async = true;
-  script.src = "https://eocampaign1.com/form/f77f6eca-f422-11f0-af94-c9c0c74f45fc.js";
-  script.dataset.form = "f77f6eca-f422-11f0-af94-c9c0c74f45fc";
-
   container.dataset.loaded = "true";
-  container.appendChild(script);
+  container.innerHTML = `
+    <form id="email-form" method="post" action="https://postletter.dev/subscribe" data-postletter-subscribe-form>
+      <input type="hidden" name="newsletter" value="uTw0IV08y6g" />
+      <input type="email" name="email" placeholder="jamie@example.com" required />
+      <button type="submit">Subscribe</button>
+    </form>
+    <script async src="https://postletter.dev/static/js/subscribe_embed.js"><\/script>
+  `;
 }
 
 function openSubscribePanel(nav, panel) {

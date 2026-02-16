@@ -841,52 +841,79 @@ body:not(.post) .upvote-count {
 }
 
 /* 9.2 Forms */
+.subscribe-section {
+  text-align: center;
+  padding: 3rem 0 1rem;
+}
+
+.subscribe-title {
+  font-size: 1.75rem;
+  font-weight: 700;
+  margin: 0 0 0.3rem;
+}
+
+.subscribe-tagline {
+  font-size: 1rem;
+  color: var(--color-muted);
+  margin: 0 0 2rem;
+}
+
 #email-form {
-  margin-top: 2rem;
+  display: flex;
+  gap: 0;
+  background: #ededee;
+  border-radius: 6px;
+  padding: 5px;
+  margin: 0 auto;
+  max-width: 480px;
 }
 
-#email-form .emailoctopus-form input,
-.menu-subscribe-panel .emailoctopus-form input {
-  font-family: var(--font-serif) !important;
-  font-size: 17px !important;
-  line-height: 1.7 !important;
+#email-form input[type="email"] {
+  flex: 1;
+  font-family: var(--font-serif);
+  font-size: 16px;
+  line-height: 1.7;
+  padding: 8px 14px;
+  border: none;
+  background: transparent;
+  outline: none;
+  min-width: 0;
 }
 
-#email-form .emailoctopus-form input[type=submit],
-.menu-subscribe-panel .emailoctopus-form input[type=submit] {
-  font-family: var(--font-serif) !important;
-  font-size: 17px !important;
-  line-height: 1.7 !important;
-  background-color: var(--color-link) !important;
-  border: none !important;
+#email-form input[type="email"]::placeholder {
+  color: var(--color-subtle);
+}
+
+#email-form button[type="submit"] {
+  font-family: var(--font-serif);
+  font-size: 15px;
   font-weight: 600;
-  padding-left: 0 !important;
-  padding-right: 0 !important;
+  line-height: 1.7;
+  padding: 8px 22px;
+  background-color: var(--color-link);
+  color: #fff;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  white-space: nowrap;
 }
 
-#email-form .emailoctopus-form input:not([type=submit]):focus,
-.menu-subscribe-panel .emailoctopus-form input:not([type=submit]):focus {
-  border-color: var(--color-subtle) !important;
-  box-shadow: none !important;
+#email-form button[type="submit"]:hover {
+  background-color: var(--color-link-hover);
 }
 
-#email-form .form-container,
-.menu-subscribe-panel .form-container {
-  font-family: var(--font-serif) !important;
-  font-size: 17px !important;
-  line-height: 1.7 !important;
+.menu-subscribe-panel #email-form {
+  max-width: none;
 }
 
-#email-form .btn,
-.menu-subscribe-panel .btn {
-  padding: .34rem .75rem !important;
+#email-form input[type="email"]:focus {
+  background: transparent;
+  box-shadow: none;
 }
 
-#email-form .btn:focus,
-.menu-subscribe-panel .btn:focus {
-  box-shadow: none !important;
+.menu-subscribe-panel #email-form {
+  max-width: none;
 }
-
 
 /* ========================
    10. FOOTER
@@ -1166,11 +1193,9 @@ footer a {
 
 /* 12.5 Small Mobile (max-width: 577px) */
 @media (max-width: 577px) {
-
-  #email-form .emailoctopus-form input[type=submit],
-  .menu-subscribe-panel .emailoctopus-form input[type=submit] {
-    width: 16px !important;
-    height: 40px !important;
+  #email-form button[type="submit"] {
+    width: 16px;
+    height: 40px;
     text-indent: -9999px;
     overflow: hidden;
     white-space: nowrap;
