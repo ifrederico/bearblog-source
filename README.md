@@ -19,6 +19,10 @@ That is it. Save, refresh your site, and the theme should be live.
 - `footer.html` includes extra footer links (`/privacy-policy/` and `/terms-use/`) at the top. Change or remove them if your routes are different.
 - The header loads Google Fonts (`Literata`), and the CSS also references `Source Code Pro` and `Work Sans`.
 
+## Attribution
+
+Based on Ghost Source Theme (MIT).
+
 ## License
 
 MIT. See `LICENSE`.
