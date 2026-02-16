@@ -1200,10 +1200,26 @@ footer a {
     text-indent: -9999px;
     overflow: hidden;
     white-space: nowrap;
-    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 256 256' fill='white'><path d='M224.49,136.49l-72,72a12,12,0,0,1-17-17L187,140H40a12,12,0,0,1,0-24H187L135.51,64.48a12,12,0,0,1,17-17l72,72A12,12,0,0,1,224.49,136.49Z'/></svg>");
     background-repeat: no-repeat;
     background-position: center;
     background-size: 22px 22px;
     padding: 10px 22px;
+    /* default: arrow */
+    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 256 256' fill='white'><path d='M224.49,136.49l-72,72a12,12,0,0,1-17-17L187,140H40a12,12,0,0,1,0-24H187L135.51,64.48a12,12,0,0,1,17-17l72,72A12,12,0,0,1,224.49,136.49Z'/></svg>");
+  }
+
+  /* loading: three dots */
+  #email-form button[data-state="loading"] {
+    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='white'><circle cx='4' cy='12' r='2.5'/><circle cx='12' cy='12' r='2.5'/><circle cx='20' cy='12' r='2.5'/></svg>");
+  }
+
+  /* success: checkmark */
+  #email-form button[data-state="success"] {
+    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='white' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'><polyline points='4 12 9 17 20 6'/></svg>");
+  }
+
+  /* error: X */
+  #email-form button[data-state="error"] {
+    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='white' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'><line x1='6' y1='6' x2='18' y2='18'/><line x1='6' y1='18' x2='18' y2='6'/></svg>");
   }
 }
