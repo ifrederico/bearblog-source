@@ -878,7 +878,7 @@ body:not(.post) .upvote-count {
   font-size: 1.2rem;
 }
 
-#email-form {
+.email-form {
   display: flex;
   gap: 0;
   background: #eee;
@@ -889,7 +889,7 @@ body:not(.post) .upvote-count {
   position: relative;
 }
 
-#email-form input[type="email"] {
+.email-form input[type="email"] {
   width: 100%;
   font-family: var(--font-serif);
   font-size: 16px;
@@ -901,11 +901,11 @@ body:not(.post) .upvote-count {
   outline: none;
 }
 
-#email-form input[type="email"]::placeholder {
+.email-form input[type="email"]::placeholder {
   color: var(--color-subtle);
 }
 
-#email-form button[type="submit"] {
+.email-form button[type="submit"] {
   position: absolute;
   right: 5px;
   top: 50%;
@@ -922,20 +922,20 @@ body:not(.post) .upvote-count {
   white-space: nowrap;
 }
 
-#email-form button[type="submit"]:hover {
+.email-form button[type="submit"]:hover {
   background-color: var(--color-link-hover);
 }
 
-.menu-subscribe-panel #email-form {
+.menu-subscribe-panel .email-form {
   max-width: none;
 }
 
-#email-form input[type="email"]:focus {
+.email-form input[type="email"]:focus {
   background: transparent;
   box-shadow: none;
 }
 
-.menu-subscribe-panel #email-form {
+.menu-subscribe-panel .email-form {
   max-width: none;
 }
 
@@ -1217,7 +1217,7 @@ footer a {
 
 /* 12.5 Small Mobile (max-width: 577px) */
 @media (max-width: 577px) {
-  #email-form button[type="submit"] {
+  .email-form button[type="submit"] {
     text-indent: -9999px;
     overflow: hidden;
     white-space: nowrap;
@@ -1230,17 +1230,17 @@ footer a {
   }
 
   /* loading: three dots */
-  #email-form button[data-state="loading"] {
+  .email-form button[data-state="loading"] {
     background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='white'><circle cx='4' cy='12' r='2.5'/><circle cx='12' cy='12' r='2.5'/><circle cx='20' cy='12' r='2.5'/></svg>");
   }
 
   /* success: checkmark */
-  #email-form button[data-state="success"] {
+  .email-form button[data-state="success"] {
     background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='white' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'><polyline points='4 12 9 17 20 6'/></svg>");
   }
 
   /* error: X */
-  #email-form button[data-state="error"] {
+  .email-form button[data-state="error"] {
     background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='white' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'><line x1='6' y1='6' x2='18' y2='18'/><line x1='6' y1='18' x2='18' y2='6'/></svg>");
   }
 }
