@@ -688,6 +688,12 @@ body.page main>h3:not(:first-child) {
   margin-top: calc(56px * var(--content-spacing-factor, 1));
 }
 
+body.post main > :is(hr, blockquote, iframe),
+body.page main > :is(hr, blockquote, iframe) {
+  margin-top: calc(48px * var(--content-spacing-factor, 1)) !important;
+  position: relative;
+}
+
 /* 8.2 Lists */
 .article-content>ul,
 .article-content>ol,
