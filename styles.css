@@ -591,6 +591,8 @@ ul.blog-posts li img.post-thumb.is-placeholder {
   text-align: left;
   width: 100%;
   grid-column: main-start / main-end;
+  letter-spacing: -.014em;
+  margin-top: 40px
 }
 
 .see-more a {
@@ -694,6 +696,11 @@ body.page main > :is(hr, blockquote, iframe) {
   position: relative;
 }
 
+body.post main > :is(hr, blockquote, iframe) + *,
+body.page main > :is(hr, blockquote, iframe) + * {
+  margin-top: 48px !important;
+}
+
 /* 8.2 Lists */
 .article-content>ul,
 .article-content>ol,
@@ -782,10 +789,18 @@ body.blog main figure {
 figcaption {
   padding: 1rem 1.5rem 0;
   text-align: center;
-  color: rgba(0, 0, 0, 0.5);
+  color: rgba(0, 0, 0, 0.8);
   font-weight: 500;
   font-size: 0.85rem;
   line-height: 1.4em;
+}
+
+.caption {
+  display: block;
+  font-size: 1rem;
+  margin-top: 12px;
+  text-align: center;
+  color: rgba(0, 0, 0, 0.8);
 }
 
 
@@ -851,7 +866,7 @@ body:not(.post) .upvote-count {
 /* 9.2 Forms */
 .subscribe-section {
   text-align: center;
-  padding: 3rem 0 1rem;
+  padding: 3rem 0 5.4rem;
 }
 
 .subscribe-title {
@@ -928,12 +943,11 @@ body:not(.post) .upvote-count {
    10. FOOTER
    ======================== */
 footer {
-  padding: 30px 0 50px;
   grid-column: full-start / full-end;
 }
 
 footer>span {
-  font-size: 0.9rem;
+  font-size: 1rem;
   color: var(--color-text);
   grid-column: wide-start / wide-end;
   display: block;
@@ -941,6 +955,7 @@ footer>span {
 
 footer>span:last-child {
   text-align: center;
+  margin-bottom: 2.8rem;
 }
 
 footer a {
