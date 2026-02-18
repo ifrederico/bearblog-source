@@ -669,8 +669,10 @@ body.page main>*+* {
   margin-bottom: 0;
 }
 
-.article-content [id]:not(:first-child) {
-  margin: 1.5em 0 0;
+.article-content > [id]:not(:first-child),
+body.post main > [id]:not(:first-child),
+body.page main > [id]:not(:first-child) {
+  margin-top: calc(56px * var(--content-spacing-factor, 1));
 }
 
 .article-content> :is(h1, h2, h3, h4, h5, h6)+p,
@@ -682,12 +684,6 @@ body.blog main> :is(h1, h2, h3, h4, h5, h6)+p {
 
 .article-content>[id]+* {
   margin-top: 1.5rem;
-}
-
-.article-content>h3:not(:first-child),
-body.post main>h3:not(:first-child),
-body.page main>h3:not(:first-child) {
-  margin-top: calc(56px * var(--content-spacing-factor, 1));
 }
 
 body.post main > :is(hr, blockquote, iframe),
