@@ -1,3 +1,15 @@
+<div class="subscribe-section">
+  <h2 class="subscribe-title">Frederico</h2>
+  <p class="subscribe-tagline">Thoughts and recipes from the stuff I cook.</p>
+  <form class="email-form" method="post" action="https://postletter.dev/subscribe" data-postletter-subscribe-form>
+    <input type="hidden" name="newsletter" value="uTw0IV08y6g" />
+    <input type="email" name="email" placeholder="you@example.com" required />
+    <button type="submit">Subscribe</button>
+  </form>
+</div>
+<script async src="https://postletter.dev/static/js/subscribe_embed.js?v=1771270692"></script>
+
+
 <div class="sub-footer">
   <a href="/privacy-policy/" class="footer-extra-link">Privacy Policy</a>
   <a href="/terms-use/" class="footer-extra-link">Terms of Use</a>
@@ -194,13 +206,17 @@ function loadSubscribeForm(panel) {
 
   container.dataset.loaded = "true";
   container.innerHTML = `
-    <form id="email-form" method="post" action="https://postletter.dev/subscribe" data-postletter-subscribe-form>
+    <form class="email-form" method="post" action="https://postletter.dev/subscribe" data-postletter-subscribe-form>
       <input type="hidden" name="newsletter" value="uTw0IV08y6g" />
       <input type="email" name="email" placeholder="jamie@example.com" required />
       <button type="submit">Subscribe</button>
     </form>
-    <script async src="https://postletter.dev/static/js/subscribe_embed.js"><\/script>
   `;
+
+  const script = document.createElement("script");
+  script.async = true;
+  script.src = "https://postletter.dev/static/js/subscribe_embed.js";
+  container.appendChild(script);
 }
 
 function openSubscribePanel(nav, panel) {
@@ -360,6 +376,57 @@ function initBlogFilterHeading() {
   heading.replaceWith(title);
 }
 
+// Ensure footer credits include Bear + Postletter and open in new tabs.
+function initPoweredByLink() {
+  const mobileMedia = window.matchMedia("(max-width: 650px)");
+
+  const applyTarget = () => {
+    const footer = document.querySelector("footer");
+    if (!footer) return;
+
+    const bearLink = Array.from(
+      footer.querySelectorAll('a[href*="bearblog.dev"]')
+    ).find((link) => /bear/i.test(link.textContent || ""));
+    if (!bearLink) return;
+
+    const creditContainer = bearLink.closest("span") || bearLink.parentElement;
+    if (!creditContainer) return;
+
+    const desktopHtml =
+      'Powered by <a href="https://bearblog.dev">Bear <span role="img" class="bear" aria-label="ASCII bear logo">ʕ•ᴥ•ʔ</span></a> &middot; Newsletter by <a href="https://postletter.dev">Postletter</a>';
+    const mobileHtml =
+      '<a href="https://bearblog.dev">Bear <span role="img" class="bear" aria-label="ASCII bear logo">ʕ•ᴥ•ʔ</span></a> &middot; <a href="https://postletter.dev">Postletter</a>';
+    const nextLayout = mobileMedia.matches ? "mobile" : "desktop";
+
+    if (creditContainer.dataset.creditLayout !== nextLayout) {
+      creditContainer.innerHTML = nextLayout === "mobile" ? mobileHtml : desktopHtml;
+      creditContainer.dataset.creditLayout = nextLayout;
+    }
+
+    creditContainer.querySelectorAll('a[href^="http"]').forEach((link) => {
+      link.setAttribute("target", "_blank");
+
+      const relValues = new Set(
+        (link.getAttribute("rel") || "")
+          .split(/\s+/)
+          .filter(Boolean)
+      );
+      relValues.add("noopener");
+      relValues.add("noreferrer");
+      link.setAttribute("rel", Array.from(relValues).join(" "));
+    });
+  };
+
+  applyTarget();
+  window.setTimeout(applyTarget, 0);
+  window.addEventListener("load", applyTarget);
+  if (mobileMedia.addEventListener) {
+    mobileMedia.addEventListener("change", applyTarget);
+  } else if (mobileMedia.addListener) {
+    mobileMedia.addListener(applyTarget);
+  }
+}
+
 // Fetch and display post thumbnails and excerpts for blog listing
 async function initBlogPostThumbnails() {
   const postItems = document.querySelectorAll("ul.blog-posts li");
@@ -478,6 +545,7 @@ function initPage() {
   initActiveNavLink();
   initBlogAllPostsLabel();
   initBlogFilterHeading();
+  initPoweredByLink();
   initBlogPostThumbnails();
 }
 

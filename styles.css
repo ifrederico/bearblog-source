@@ -486,6 +486,10 @@ body.blog main>h1.blog-filter-title {
   margin-bottom: 0.4rem;
 }
 
+body.blog main>h1.blog-filter-title + small {
+  display: none;
+}
+
 body.blog #tags {
   display: none;
 }
@@ -935,6 +939,14 @@ body:not(.post) .upvote-count {
 
 .menu-subscribe-panel .email-form {
   max-width: none;
+}
+
+.postletter-sniper-link-container {
+  display: flex;
+  position: absolute;
+  justify-self: center;
+  max-width: 520px;
+  padding-top: 16px;
 }
 
 /* ========================
