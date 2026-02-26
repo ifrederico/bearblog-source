@@ -261,6 +261,69 @@ function initPostTags() {
   }
 }
 
+// Wrap and move "Read more" below the upvote button for post pages
+function initPostReadMoreSection() {
+  if (!document.body.classList.contains("post")) return;
+
+  const main = document.querySelector("main");
+  if (!main) return;
+
+  const upvoteForm = main.querySelector("#upvote-form");
+  const heading = main.querySelector("h2#read-more");
+  if (!upvoteForm || !heading) return;
+
+  let list = heading.nextElementSibling;
+  while (list) {
+    if (list.matches && list.matches("ul.embedded.blog-posts")) break;
+    if (list.tagName === "P" && !list.textContent.trim()) {
+      list = list.nextElementSibling;
+      continue;
+    }
+    list = null;
+    break;
+  }
+  if (!list) return;
+
+  const normalizePath = (path) =>
+    path.length > 1 ? path.replace(/\/+$/, "") : path;
+  const currentPath = normalizePath(location.pathname);
+
+  // Avoid showing the current post in "Read more"
+  list.querySelectorAll("li a[href]").forEach((link) => {
+    const linkPath = normalizePath(new URL(link.href, location.origin).pathname);
+    if (linkPath === currentPath) {
+      link.closest("li")?.remove();
+    }
+  });
+
+  if (!list.querySelector("li")) {
+    heading.remove();
+    list.remove();
+    return;
+  }
+
+  const previousElement = list.previousElementSibling;
+  if (previousElement?.tagName === "P" && !previousElement.textContent.trim()) {
+    previousElement.remove();
+  }
+
+  const nextElement = list.nextElementSibling;
+  if (nextElement?.tagName === "P" && !nextElement.textContent.trim()) {
+    nextElement.remove();
+  }
+
+  let section = main.querySelector("section.post-read-more");
+  if (!section) {
+    section = document.createElement("section");
+    section.className = "post-read-more";
+  }
+
+  section.innerHTML = "";
+  section.appendChild(heading);
+  section.appendChild(list);
+  upvoteForm.insertAdjacentElement("afterend", section);
+}
+
 // Bear edit shortcut
 function initEditRedirect() {
   const wantsEdit =
@@ -539,8 +602,9 @@ async function initBlogPostThumbnails() {
 function initPage() {
   initMenu();
   initSubscribePanel();
-  initPostCardLinks();
   initPostTags();
+  initPostReadMoreSection();
+  initPostCardLinks();
   initEditRedirect();
   initActiveNavLink();
   initBlogAllPostsLabel();

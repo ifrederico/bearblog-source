@@ -469,6 +469,105 @@ hr.home-divider,
   grid-column: wide-start / wide-end;
 }
 
+.post-read-more {
+  grid-column: full-start / full-end;
+  margin-top: clamp(36px, 5vw, 64px);
+  padding-top: clamp(24px, 3vw, 36px);
+  padding-inline: max(4vmin, 20px);
+}
+
+body.post h2#read-more {
+  margin: 0;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid var(--color-border);
+  text-transform: uppercase;
+  letter-spacing: 0.02em;
+  font-size: 1.05rem;
+  font-weight: 600;
+}
+
+body.post h2#read-more ~ ul.embedded.blog-posts {
+  --read-more-col-gap: 32px;
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 0 var(--read-more-col-gap);
+  margin-top: 24px;
+}
+
+body.post h2#read-more ~ ul.embedded.blog-posts li {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: 8px;
+  margin: 0;
+  padding-bottom: 0;
+  border-bottom: none;
+  border-right: none;
+  padding-inline: 0;
+  position: relative;
+}
+
+body.post h2#read-more ~ ul.embedded.blog-posts li:not(:last-child)::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  right: calc(var(--read-more-col-gap) / -2);
+  width: 1px;
+  height: 100%;
+  background-color: var(--color-border);
+}
+
+body.post h2#read-more ~ ul.embedded.blog-posts li img {
+  grid-column: auto;
+  grid-row: auto;
+  width: 100%;
+  height: auto;
+  aspect-ratio: 4 / 3;
+  object-fit: cover;
+  order: 0;
+}
+
+body.post h2#read-more ~ ul.embedded.blog-posts li a {
+  grid-column: auto;
+  grid-row: auto;
+  align-self: auto;
+  font-size: 1.12rem;
+  order: 1;
+  margin-top: 6px;
+}
+
+body.post h2#read-more ~ ul.embedded.blog-posts li p {
+  grid-column: auto;
+  grid-row: auto;
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  order: 2;
+}
+
+body.post h2#read-more ~ ul.embedded.blog-posts li span {
+  margin-top: 0;
+  order: 3;
+  text-transform: none;
+}
+
+@media (max-width: 576px) {
+  body.post h2#read-more ~ ul.embedded.blog-posts {
+    grid-template-columns: 1fr;
+  }
+
+  body.post h2#read-more ~ ul.embedded.blog-posts li {
+    border-right: none;
+    padding-inline: 0;
+  }
+
+  body.post h2#read-more ~ ul.embedded.blog-posts li::after {
+    content: none;
+  }
+}
+
 .posts-wrap {
   grid-column: main-start / main-end;
 }
