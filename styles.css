@@ -476,6 +476,11 @@ hr.home-divider,
   padding-inline: max(4vmin, 20px);
 }
 
+body.post #upvote-form + .post-read-more {
+  margin-top: clamp(56px, 7vw, 96px);
+  margin-bottom: clamp(40px, 5vw, 72px);
+}
+
 body.post h2#read-more {
   margin: 0;
   padding-bottom: 1rem;
