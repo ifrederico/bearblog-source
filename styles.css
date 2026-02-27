@@ -182,7 +182,7 @@ h1 {
 }
 
 h2 {
-  font-size: clamp(1.5rem, 0.5vw + 1.4rem, 1.85rem);
+  font-size: clamp(1.5rem, 0.5vw + 1.4rem, 1.7rem);
   font-weight: 700;
 }
 
@@ -471,14 +471,15 @@ hr.home-divider,
 
 .post-read-more {
   grid-column: full-start / full-end;
-  margin-top: clamp(36px, 5vw, 64px);
-  padding-top: clamp(24px, 3vw, 36px);
-  padding-inline: max(4vmin, 20px);
+  margin-top: clamp(64px, 8vw, 120px);
+  padding-top: clamp(36px, 5vw, 64px);
+
+  margin-bottom: clamp(48px, 6vw, 88px);
 }
 
 body.post #upvote-form + .post-read-more {
-  margin-top: clamp(56px, 7vw, 96px);
-  margin-bottom: clamp(40px, 5vw, 72px);
+  margin-top: clamp(80px, 10vw, 140px);
+  margin-bottom: clamp(48px, 6vw, 88px);
 }
 
 body.post h2#read-more {
@@ -487,7 +488,7 @@ body.post h2#read-more {
   border-bottom: 1px solid var(--color-border);
   text-transform: uppercase;
   letter-spacing: 0.02em;
-  font-size: 1.05rem;
+  font-size: 0.8rem;
   font-weight: 600;
 }
 
@@ -545,7 +546,7 @@ body.post h2#read-more ~ ul.embedded.blog-posts li p {
   grid-column: auto;
   grid-row: auto;
   display: -webkit-box;
-  -webkit-line-clamp: 3;
+  -webkit-line-clamp: 2;
   -webkit-box-orient: vertical;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -561,11 +562,6 @@ body.post h2#read-more ~ ul.embedded.blog-posts li span {
 @media (max-width: 576px) {
   body.post h2#read-more ~ ul.embedded.blog-posts {
     grid-template-columns: 1fr;
-  }
-
-  body.post h2#read-more ~ ul.embedded.blog-posts li {
-    border-right: none;
-    padding-inline: 0;
   }
 
   body.post h2#read-more ~ ul.embedded.blog-posts li::after {
@@ -700,14 +696,14 @@ ul.blog-posts li img.post-thumb.is-placeholder {
   width: 100%;
   grid-column: main-start / main-end;
   letter-spacing: -.014em;
-  margin-top: 40px
+  margin-top: 8px;
 }
 
 .see-more a {
   display: inline-flex;
   align-items: center;
   gap: 8px;
-  font-size: clamp(1.25rem, 0.4vw + 1.15rem, 1.5rem);
+  font-size: clamp(1rem, 0.3vw + 0.95rem, 1.15rem);
   font-weight: 600;
   line-height: 1.25;
   color: var(--color-heading);
@@ -734,6 +730,10 @@ body.blog main>p:has(> time) {
 body.post main>p:has(> img),
 body.blog main>p:has(> img) {
   margin: 0 0 40px;
+}
+
+body.blog main > small:has(.tags) {
+  display: none;
 }
 
 /* 7.4 Tags & Metadata */
@@ -975,13 +975,20 @@ body:not(.post) .upvote-count {
   padding: 3rem 0 5.4rem;
 }
 
+body.blog .subscribe-section,
+body.page .subscribe-section,
+body.home .subscribe-section {
+  padding-top: clamp(4rem, 6vw, 7rem);
+}
+
 .subscribe-title {
   margin: 1rem 0 0.8rem;
 }
 
 .subscribe-tagline {
   margin: 0 0 2rem;
-  font-size: 1.2rem;
+  font-size: 1rem;
+  letter-spacing: 0.6px;
 }
 
 .email-form {

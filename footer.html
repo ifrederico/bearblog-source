@@ -10,6 +10,11 @@
 <script async src="https://postletter.dev/static/js/subscribe_embed.js?v=1771270692"></script>
 
 
+<template id="read-more-template">
+  <h2 id="read-more">Read more</h2>
+  {{ posts|limit:5|description:True|image:True }}
+</template>
+
 <div class="sub-footer">
   <a href="/privacy-policy/" class="footer-extra-link">Privacy Policy</a>
   <a href="/terms-use/" class="footer-extra-link">Terms of Use</a>
@@ -269,20 +274,37 @@ function initPostReadMoreSection() {
   if (!main) return;
 
   const upvoteForm = main.querySelector("#upvote-form");
-  const heading = main.querySelector("h2#read-more");
-  if (!upvoteForm || !heading) return;
+  if (!upvoteForm) return;
 
-  let list = heading.nextElementSibling;
-  while (list) {
-    if (list.matches && list.matches("ul.embedded.blog-posts")) break;
-    if (list.tagName === "P" && !list.textContent.trim()) {
-      list = list.nextElementSibling;
-      continue;
+  // Try to find read-more in the post content first, then fall back to the footer template
+  let heading = main.querySelector("h2#read-more");
+  let list = null;
+
+  if (heading) {
+    // Found in post content — find the adjacent list
+    let sibling = heading.nextElementSibling;
+    while (sibling) {
+      if (sibling.matches && sibling.matches("ul.embedded.blog-posts")) break;
+      if (sibling.tagName === "P" && !sibling.textContent.trim()) {
+        sibling = sibling.nextElementSibling;
+        continue;
+      }
+      sibling = null;
+      break;
     }
-    list = null;
-    break;
+    list = sibling;
   }
-  if (!list) return;
+
+  if (!heading || !list) {
+    // Fall back to the template in the footer
+    const template = document.querySelector("#read-more-template");
+    if (!template) return;
+
+    const fragment = template.content.cloneNode(true);
+    heading = fragment.querySelector("h2#read-more");
+    list = fragment.querySelector("ul.embedded.blog-posts");
+    if (!heading || !list) return;
+  }
 
   const normalizePath = (path) =>
     path.length > 1 ? path.replace(/\/+$/, "") : path;
@@ -296,12 +318,13 @@ function initPostReadMoreSection() {
     }
   });
 
-  if (!list.querySelector("li")) {
-    heading.remove();
-    list.remove();
-    return;
-  }
+  // Always show exactly 4 posts
+  const items = list.querySelectorAll("li");
+  items.forEach((item, i) => { if (i >= 4) item.remove(); });
 
+  if (!list.querySelector("li")) return;
+
+  // Clean up empty paragraphs around the original elements
   const previousElement = list.previousElementSibling;
   if (previousElement?.tagName === "P" && !previousElement.textContent.trim()) {
     previousElement.remove();
